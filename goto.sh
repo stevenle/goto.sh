@@ -1,8 +1,6 @@
 #!/bin/sh
 
-set -e
-
-fn() {
+_goto() {
   local alias="$1"
   local destination="$2"
   local rootdir="$HOME/.goto"
@@ -29,4 +27,4 @@ fn() {
   fi
 }
 
-fn $@
+_goto $@
