@@ -2,27 +2,31 @@
 
 set -e
 
-ALIAS="$1"
-FOLDER="$2"
-ROOT="$HOME/.goto"
+fn() {
+  local alias="$1"
+  local destination="$2"
+  local rootdir="$HOME/.goto"
 
-if [ -z "$ALIAS" ]; then
-  echo "usage: $0 <alias> [destination]"
-  exit 0
-fi
-
-if [ ! -d "$ROOT" ]; then
-  mkdir -p $ROOT
-fi
-
-SYMLINK="$ROOT/$ALIAS"
-if [ -z "$FOLDER" ]; then
-  if [ -L "$SYMLINK" ]; then
-    cd -P "$SYMLINK"
-  else
-    echo "\"$ALIAS\" does not exist"
+  if [ -z "$alias" ]; then
+    echo "usage: goto <alias> [destination]"
+    return
   fi
-else
-  ln -s -f $(realpath $FOLDER) $SYMLINK
-  echo "created \"$ALIAS\""
-fi
+
+  if [ ! -d "$rootdir" ]; then
+    mkdir -p $rootdir
+  fi
+
+  local symlink="$rootdir/$alias"
+  if [ -z "$destination" ]; then
+    if [ -L "$symlink" ]; then
+      cd -P "$symlink"
+    else
+      echo "\"$alias\" does not exist"
+    fi
+  else
+    ln -s -f $(realpath $destination) $symlink
+    echo "created \"$alias\""
+  fi
+}
+
+fn $@
